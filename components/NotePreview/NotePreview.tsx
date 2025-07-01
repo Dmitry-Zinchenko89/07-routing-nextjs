@@ -1,15 +1,5 @@
-import { Note } from '@/types/note';
+// import css from './NotePreview.module.css';
 
-interface Props {
-    note: Note;
-}
-
-export default function NotePreview({ note }: Props) {
-    return (
-        <div>
-            <h2>{note.title}</h2>
-            <p>{note.content}</p>
-            <p><em>#{note.tag}</em></p>
-        </div>
-    );
+export default function NotePreview() {
+    return null;
 }

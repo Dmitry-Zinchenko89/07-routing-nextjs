@@ -1,19 +1,14 @@
-import { notFound } from 'next/navigation';
-import Notes from './Notes.client';
+import { fetchNotes } from '@/lib/api';
+import NotesClient from './Notes.client';
 
-interface Props {
-    params: {
-        slug: string[];
-    };
-}
+type Props = {
+    params: Promise<{ slug: string[] }>;
+};
 
-export default async function FilteredNotesPage({ params }: Props) {
+export default async function Notes({ params }: Props) {
+    const { slug } = await params;
+    const slugURL = slug?.join('/');
+    const response = await fetchNotes(1, '', slugURL);
 
-    const tag = params.slug[0] === 'All' ? undefined : params.slug[0];
-
-    if (!params.slug) {
-        notFound();
-    }
-
-    return <Notes tag={tag} />;
+    return <NotesClient initialData={response} category={slugURL} />;
 }
