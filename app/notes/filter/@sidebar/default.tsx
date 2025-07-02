@@ -3,7 +3,7 @@ import css from './SidebarNotes.module.css';
 
 export default function SidebarNotes() {
     const tagsList = [
-        'All notes',
+        'All',
         'Todo',
         'Work',
         'Personal',

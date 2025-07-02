@@ -27,9 +27,8 @@ export default function NoteForm({ onClose }: NoteFormProps) {
         mutationFn: createNote,
         onSuccess: () => {
             onClose();
-            queryClient.invalidateQueries({
-                queryKey: ['allNotes'],
-            });
+
+            queryClient.invalidateQueries({ queryKey: ['notes'] });
         },
     });
 
@@ -86,7 +85,7 @@ export default function NoteForm({ onClose }: NoteFormProps) {
                 </div>
 
                 <div className={css.actions}>
-                    <button type="button" className={css.cancelButton} onClick={onClose}>
+                    <button type="button" className={css.cancelButton} onClick={() => history.back()}>
                         Cancel
                     </button>
                     <button

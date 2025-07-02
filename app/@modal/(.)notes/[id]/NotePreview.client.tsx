@@ -1,74 +1,60 @@
 'use client';
 
-import { useParams } from 'next/navigation';
-import css from '@/app/@modal/(.)notes/[id]/NotePreview.module.css';
+import { useEffect } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { fetchNoteById } from '@/lib/api';
-import { format, parseISO } from 'date-fns';
 import Modal from '@/components/Modal/Modal';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import css from './NotePreview.module.css';
 
-export default function NotePreviewClient() {
-    const { id } = useParams<{ id: string }>();
-
+export default function NotePreview() {
     const router = useRouter();
-
-    useEffect(() => {
-        document.addEventListener('keydown', handleKeyDown);
-        document.body.style.overflow = 'hidden';
-
-        function handleKeyDown(event: KeyboardEvent) {
-            if (event.key === 'Escape') {
-                router.push('/notes/filter/Todo');
-            }
-        }
-
-        return () => {
-            document.removeEventListener('keydown', handleKeyDown);
-            document.body.style.overflow = '';
-        };
-    });
+    const params = useParams();
+    const id = Number(params?.id);
 
     const {
         data: note,
         isLoading,
-        error,
+        isError,
     } = useQuery({
         queryKey: ['note', id],
-        queryFn: () => fetchNoteById(Number(id)),
-        refetchOnMount: false,
+        queryFn: () => fetchNoteById(id),
+        enabled: !isNaN(id),
     });
 
-    if (isLoading) return <p>Loading, please wait...</p>;
-    if (error || !note) return <p>Something went wrong.</p>;
+    const handleClose = () => {
+        router.back();
+    };
 
-    let label = '';
-    let formattedDate = 'Date not available';
+    useEffect(() => {
+        const handleEsc = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                handleClose();
+            }
+        };
 
-    if (note?.updatedAt || note?.createdAt) {
-        const backendData = note?.updatedAt || note?.createdAt;
-        label = note?.updatedAt ? 'Updated at: ' : 'Created at: ';
-        const date = parseISO(backendData);
-        formattedDate = format(date, "HH:mm, do 'of' MMMM yyyy");
-    }
+        document.addEventListener('keydown', handleEsc);
+        return () => document.removeEventListener('keydown', handleEsc);
+    }, [handleClose]);
+
+    if (isLoading) return null;
+    if (isError || !note) return null;
 
     return (
-        <Modal>
-            <div className={css.container}>
-                <div className={css.item}>
-                    <div className={css.header}>
-                        <h2>{note?.title}</h2>
-                        <button onClick={() => router.back()} className={css.editBtn}>
-                            Edit note
-                        </button>
-                    </div>
-                    <p className={css.content}>{note?.content}</p>
-                    <p className={css.date}>
-                        {label}
-                        {formattedDate}
-                    </p>
+        <Modal onClose={handleClose}>
+            <div className={css.preview}>
+                <h2 className={css.title}>{note.title}</h2>
+                <p className={css.tag}>Tag: {note.tag}</p>
+                <p className={css.content}>{note.content}</p>
+                <div className={css.dates}>
+                    <p>Created: {new Date(note.createdAt).toLocaleString()}</p>
+                    {note.updatedAt && note.updatedAt !== note.createdAt && (
+                        <p>Updated: {new Date(note.updatedAt).toLocaleString()}</p>
+                    )}
                 </div>
+                <button onClick={handleClose} className={css.closeButton}>
+                    Close
+                </button>
             </div>
         </Modal>
     );

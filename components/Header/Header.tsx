@@ -14,6 +14,11 @@ export default async function Header() {
                         <Link href="/">Home</Link>
                     </li>
                     <li>
+                        <Link href="/notes/create" className={css.createButton}>
+                            Create note +
+                        </Link>
+                    </li>
+                    <li>
                         <TagsMenu />
                     </li>
                 </ul>
