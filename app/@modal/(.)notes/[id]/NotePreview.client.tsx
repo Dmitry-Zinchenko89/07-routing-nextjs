@@ -1,5 +1,5 @@
 'use client';
-
+import { useCallback } from 'react';
 import { useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
@@ -22,19 +22,13 @@ export default function NotePreview() {
         enabled: !isNaN(id),
     });
 
-    const handleClose = () => {
+    const handleClose = useCallback(() => {
         router.back();
-    };
+    }, [router]);
 
     useEffect(() => {
-        const handleEsc = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') {
-                handleClose();
-            }
-        };
-
-        document.addEventListener('keydown', handleEsc);
-        return () => document.removeEventListener('keydown', handleEsc);
+        window.addEventListener('keydown', handleClose);
+        return () => window.removeEventListener('keydown', handleClose);
     }, [handleClose]);
 
     if (isLoading) return null;

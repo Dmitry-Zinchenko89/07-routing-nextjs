@@ -19,7 +19,7 @@ type Props = {
 export default function NotesClient({ initialData, category }: Props) {
     const [search, setSearch] = useState('');
     const [page, setPage] = useState(1);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const [debouncedQuery] = useDebounce(search, 1000);
 
     const allNotes = useQuery({
@@ -59,7 +59,7 @@ export default function NotesClient({ initialData, category }: Props) {
             {allNotes.isSuccess && allNotes.data.notes.length > 0 && (
                 <NoteList items={allNotes.data.notes} />
             )}
-            {/* {isModalOpen && <Modal onClose={() => setIsModalOpen(false)} />} */}
+
         </div>
     );
 }
