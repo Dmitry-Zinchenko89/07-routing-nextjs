@@ -10,20 +10,30 @@ const headers = {
     Authorization: `Bearer ${notehubToken}`,
 };
 
-export async function fetchNotes(
-    page: number,
-    searchText: string,
-    tag?: string
-): Promise<ResponseGetData> {
+interface FetchNotesParams {
+    search?: string;
+    page?: number;
+    tag?: string;
+}
+
+export async function fetchNotes({
+    search = '',
+    page = 1,
+    tag,
+}: FetchNotesParams): Promise<ResponseGetData> {
+    const params: Record<string, string | number> = {
+        page,
+        perPage: 16,
+    };
+
+    if (search) params.search = search;
+    if (tag && tag !== 'All') params.tag = tag; // важливо: "All" не передаємо
+
     const { data } = await axios.get<ResponseGetData>('/notes', {
-        params: {
-            page,
-            perPage: 16,
-            ...(searchText !== '' ? { search: searchText } : {}),
-            ...(tag !== 'All%20notes' ? { tag } : {}),
-        },
+        params,
         headers,
     });
+
     return data;
 }
 

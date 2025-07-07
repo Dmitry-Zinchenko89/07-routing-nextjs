@@ -1,54 +1,26 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
+import { useRouter } from 'next/navigation';
 import css from './Modal.module.css';
+import { ReactNode } from 'react';
 
-interface ModalProps {
-    onClose: () => void;
-    children: React.ReactNode;
-}
+type Props = {
+    children: ReactNode;
+};
 
-export default function Modal({ children, onClose }: ModalProps) {
-    const [isMounted, setIsMounted] = useState(false);
+export default function Modal({ children }: Props) {
+    const router = useRouter();
 
-    useEffect(() => {
-        setIsMounted(true);
-        return () => setIsMounted(false);
-    }, []);
+    const close = () => router.back();
 
-    useEffect(() => {
-        if (!isMounted) return;
-
-        const handleEsc = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') onClose();
-        };
-
-        document.addEventListener('keydown', handleEsc);
-        document.body.style.overflow = 'hidden';
-
-        return () => {
-            document.removeEventListener('keydown', handleEsc);
-            document.body.style.overflow = 'auto';
-        };
-    }, [onClose, isMounted]);
-
-    const handleBackdropClick = () => {
-        onClose();
-    };
-
-    const stopPropagation = (e: React.MouseEvent) => {
-        e.stopPropagation();
-    };
-
-    if (!isMounted) return null;
-
-    return createPortal(
-        <div className={css.backdrop} role="dialog" aria-modal="true" onClick={handleBackdropClick}>
-            <div className={css.modal} onClick={stopPropagation}>
+    return (
+        <div className={css.backdrop} onClick={close}>
+            <div className={css.modal} onClick={e => e.stopPropagation()}>
+                <button className={css.closeButton} onClick={close}>
+                    ✕
+                </button>
                 {children}
             </div>
-        </div>,
-        document.body
+        </div>
     );
 }

@@ -1,9 +1,5 @@
 'use client';
 
-type Props = {
-    error: Error;
-};
-
-export default function Error({ error }: Props) {
-    return <p>Could not fetch the list of notes. {error.message}</p>;
+export default function Error() {
+    return <p style={{ padding: '1rem', color: 'red' }}>Failed to load notes.</p>;
 }

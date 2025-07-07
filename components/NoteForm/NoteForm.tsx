@@ -6,7 +6,7 @@ import css from './NoteForm.module.css';
 import type { NewNote } from '../../types/note';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createNote } from '@/lib/api';
-import { FormSchema } from '@/YupSchemes/FormSchema';
+
 
 interface NoteFormProps {
     onClose: () => void;
@@ -23,7 +23,7 @@ export default function NoteForm({ onClose }: NoteFormProps) {
     const queryClient = useQueryClient();
 
     const addNote = useMutation({
-        // mutationFn: (newNote: Note) => createNote(newNote),
+
         mutationFn: createNote,
         onSuccess: () => {
             onClose();
@@ -41,7 +41,7 @@ export default function NoteForm({ onClose }: NoteFormProps) {
         <Formik
             initialValues={initialValues}
             onSubmit={handleSubmit}
-            validationSchema={FormSchema}
+
         >
             <Form className={css.form}>
                 <div className={css.formGroup}>

@@ -1,38 +1,32 @@
 'use client';
 
 import Link from 'next/link';
-import css from './TagsMenu.module.css';
 import { useState } from 'react';
+import css from './TagsMenu.module.css';
+
+const TAGS = ['All', 'Work', 'Personal', 'Todo', 'Shopping', 'Meeting'];
 
 export default function TagsMenu() {
     const [isOpen, setIsOpen] = useState(false);
 
-    function toggle() {
-        setIsOpen(!isOpen);
-    }
-
-    const tagsList = [
-        'All notes',
-        'Todo',
-        'Work',
-        'Personal',
-        'Meeting',
-        'Shopping',
-    ];
+    const toggleMenu = () => {
+        setIsOpen(prev => !prev);
+    };
 
     return (
         <div className={css.menuContainer}>
-            <button onClick={toggle} className={css.menuButton}>
+            <button onClick={toggleMenu} className={css.menuButton}>
                 Notes ▾
             </button>
+
             {isOpen && (
                 <ul className={css.menuList}>
-                    {tagsList.map((tag, i) => (
-                        <li key={i} className={css.menuItem}>
+                    {TAGS.map(tag => (
+                        <li key={tag} className={css.menuItem}>
                             <Link
                                 href={`/notes/filter/${tag}`}
                                 className={css.menuLink}
-                                onClick={toggle}
+                                onClick={() => setIsOpen(false)}
                             >
                                 {tag}
                             </Link>
