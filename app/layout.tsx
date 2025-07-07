@@ -6,9 +6,10 @@ import css from './Home.module.css';
 
 type ChildrenType = {
   children: React.ReactNode;
+  modal: React.ReactNode;
 };
 
-export default function RootLayout({ children }: Readonly<ChildrenType>) {
+export default function RootLayout({ children, modal }: ChildrenType) {
   return (
     <html lang="en">
       <body>
@@ -16,6 +17,7 @@ export default function RootLayout({ children }: Readonly<ChildrenType>) {
           <Header />
           <main className={css.main}>
             {children}
+            {modal}
           </main>
           <Footer />
         </TanStackProvider>
