@@ -27,7 +27,7 @@ export async function fetchNotes({
     };
 
     if (search) params.search = search;
-    if (tag && tag !== 'All') params.tag = tag; // важливо: "All" не передаємо
+    if (tag && tag !== 'All') params.tag = tag;
 
     const { data } = await axios.get<ResponseGetData>('/notes', {
         params,

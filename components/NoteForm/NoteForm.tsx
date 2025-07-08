@@ -10,6 +10,7 @@ import { createNote } from '@/lib/api';
 
 interface NoteFormProps {
     onClose: () => void;
+
 }
 
 const initialValues: NewNote = {
